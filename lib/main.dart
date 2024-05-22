@@ -1,4 +1,7 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+
+import 'package:tic_tac_toe/homepage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,124 +12,100 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: MainScreen(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  bool ohTurn = true;
-  List<String> displayExOh = [
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ];
-
+class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[800],
-      body: GridView.builder(
-          itemCount: 9,
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                _tapped(index);
-              },
-              child: Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey)),
-                child: Center(
-                  child: Text(
-                    displayExOh[index],
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 224, 202, 202),
-                        fontSize: 40),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.grey[900],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 120),
+                  child: Container(
+                    child: Text(
+                      "TIC TAC TOE",
+                      style: TextStyle(
+                          fontSize: 30, color: Colors.white, letterSpacing: 3),
+                    ),
                   ),
                 ),
               ),
-            );
-          }),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: AvatarGlow(
+                      // glowBorderRadius: BorderRadius.zero,
+                      duration: Duration(seconds: 2),
+                      glowColor: Colors.white,
+                      repeat: true,
+                      startDelay: Duration(seconds: 1),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(style: BorderStyle.none),
+                            shape: BoxShape.circle),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey[900],
+                          child: Container(
+                            child: Image.asset(
+                              'assets/images/tictactoe.png',
+                              color: Colors.white,
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
+                          radius: 80,
+                        ),
+                      )),
+                ),
+              ),
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 80),
+                child: Container(
+                  child: Text(
+                    "https://t.me/azizbek_6606",
+                    style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+                  ),
+                ),
+              ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+                child: Padding(padding: EdgeInsets.only(left: 40, right: 40, bottom: 60),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    color: Colors.white,
+                    child: Center(child: Text("Play Game", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
+                    ),
+                  ),
+                ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
-  }
-
-  void _tapped(int index) {
-    setState(() {
-      if (ohTurn) {
-        displayExOh[index] = 'o';
-      } else {
-        displayExOh[index] = 'x';
-      }
-      ohTurn = !ohTurn;
-      _checkWinner();
-    });
-  }
-
-  void _checkWinner() {
-
-    if (displayExOh[0] == displayExOh[1] &&
-        displayExOh[0] == displayExOh[2] &&
-        displayExOh[0] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[3] == displayExOh[4] &&
-        displayExOh[3] == displayExOh[5] &&
-        displayExOh[3] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[6] == displayExOh[7] &&
-        displayExOh[6] == displayExOh[8] &&
-        displayExOh[6] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[0] == displayExOh[3] &&
-        displayExOh[0] == displayExOh[6] &&
-        displayExOh[0] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[1] == displayExOh[4] &&
-        displayExOh[1] == displayExOh[7] &&
-        displayExOh[1] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[2] == displayExOh[5] &&
-        displayExOh[2] == displayExOh[8] &&
-        displayExOh[2] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[6] == displayExOh[4] &&
-        displayExOh[6] == displayExOh[2] &&
-        displayExOh[6] != '') {
-      _showWinDialog();
-    }
-    if (displayExOh[0] == displayExOh[4] &&
-        displayExOh[0] == displayExOh[8] &&
-        displayExOh[0] != '') {
-      _showWinDialog();
-    }
-
-
-
-  }
-
-  void _showWinDialog() {
-    showDialog(context: context, builder: (BuildContext context){
-      return AlertDialog(title: Text("WINNER!"),);
-    });
   }
 }
